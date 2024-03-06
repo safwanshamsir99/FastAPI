@@ -1,37 +1,24 @@
-from typing import Union
+from datetime import datetime
 
 from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+
+fake_db = {}
+
+
+class Item(BaseModel):
+    title: str
+    timestamp: datetime
+    description: str | None = None
+
 
 app = FastAPI()
 
 
-class BaseItem(BaseModel):
-    description: str
-    type: str
+@app.put("/items/{id}")
+def update_item(id: str, item: Item):
+    json_compatible_item_data = jsonable_encoder(item)
+    fake_db[id] = json_compatible_item_data
 
-
-class CarItem(BaseItem):
-    type: str = "car"
-
-
-class PlaneItem(BaseItem):
-    type: str = "plane"
-    size: int
-
-
-items = {
-    "item1": {"description": "All my friends drive a low rider", "type": "car"},
-    "item2": {
-        "description": "Music is my aeroplane, it's my aeroplane",
-        "type": "plane",
-        "size": 5,
-    },
-}
-
-
-@app.get("/items/{item_id}", response_model=Union[PlaneItem, CarItem])
-async def read_item(item_id: str):
-    return items[item_id]
-
-# Union of anyOf
+# Body update
