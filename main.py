@@ -1,10 +1,15 @@
-from typing import Annotated
-
-from fastapi import FastAPI, Header
+import uvicorn
+from fastapi import FastAPI
 
 app = FastAPI()
 
 
-@app.get("/items/")
-async def read_items(x_token: Annotated[list[str] | None, Header()] = None):
-    return {"X-Token values": x_token}
+@app.get("/")
+def root():
+    a = "a"
+    b = "b" + a
+    return {"hello world": b}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
