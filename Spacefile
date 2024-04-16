@@ -1,0 +1,9 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+app_name: "GITHUB ACTIONS CICD"
+micros:
+  - name: FastAPI
+    src: ./
+    engine: python3.9
+    primary: true
+    dev: fastapi_venv/bin/uvicorn main:app --reload
